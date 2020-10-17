@@ -6,7 +6,11 @@ import json
 
 class FParams:
     def __init__(self):
-        self.current_working_folder = "\\website_download\\football_stats\\"
+        import os
+        if os.name == 'nt':
+            self.current_working_folder = "\\website_download\\football_stats\\"
+        else:
+            self.current_working_folder = "/website_download/football_stats/"
         self.current_working_file = "football_stats.htm"
 
     def LocalPath(self):
@@ -24,7 +28,7 @@ class FParams:
 """def file_params():
 
 
-    cwfolder = "\\website_download\\football_stats\\"
+    cwfolder = "/website_download/football_stats/"
     cwfile = "football_stats.htm"
 
     path = os.getcwd() + cwfolder
