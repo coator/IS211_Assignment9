@@ -1,11 +1,65 @@
 from bs4 import BeautifulSoup
 import requests
+import os
+import json
 
-r = requests.get("https://www.cbssports.com/nfl/stats/player/scoring/nfl/regular/qualifiers")
 
-soup = BeautifulSoup(r.text, 'html.parser')
+class FParams:
+    def __init__(self):
+        self.current_working_folder = "\\website_download\\football_stats\\"
+        self.current_working_file = "football_stats.htm"
 
-d = soup.find_all('tr', {"class": 'TableBase-bodyTr'})
+    def LocalPath(self):
+        return os.getcwd() + self.current_working_folder
 
-for dd in d:
-    print(dd)
+    def TotalPath(self):
+        p = self.LocalPath() + self.current_working_file
+        return str(p)
+
+    def SearchDir(self):
+        olen = os.listdir(self.LocalPath())
+        return olen
+
+
+"""def file_params():
+
+
+    cwfolder = "\\website_download\\football_stats\\"
+    cwfile = "football_stats.htm"
+
+    path = os.getcwd() + cwfolder
+    total_path = path + cwfile
+
+    search_dir = os.listdir(path)"""
+
+
+def htm_pull(files):
+    f = files()
+    if len(f.SearchDir()) == 0:
+        print(' dir empty')
+        r = requests.get("https://www.cbssports.com/nfl/stats/player/scoring/nfl/regular/qualifiers")
+        open(f.Localpath(), 'xb').write(r.content)
+    else:
+        print('items in dir, skipping download')
+    return
+
+
+def parse_file(files):
+    f = files()
+    r = open(f.TotalPath(), encoding="utf-8")
+
+    soup = BeautifulSoup(r, 'html.parser')
+    d = soup.find_all('span', {"class": "CellPlayerName--long"})
+    num = 0
+    for dd in d:
+        name_elem = dd.find('a', {"class": ""})
+        print(num,' ',dd.text.replace("\n", "").strip())
+        num+=1
+
+
+def main():
+    htm_pull(FParams)
+    parse_file(FParams)
+
+
+main()
