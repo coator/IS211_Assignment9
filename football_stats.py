@@ -6,7 +6,6 @@ import json
 
 class FParams:
     def __init__(self):
-        import os
         if os.name == 'nt':
             self.current_working_folder = "\\website_download\\football_stats\\"
         else:
