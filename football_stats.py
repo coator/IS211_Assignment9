@@ -24,18 +24,6 @@ class FParams:
         return olen
 
 
-"""def file_params():
-
-
-    cwfolder = "/website_download/football_stats/"
-    cwfile = "football_stats.htm"
-
-    path = os.getcwd() + cwfolder
-    total_path = path + cwfile
-
-    search_dir = os.listdir(path)"""
-
-
 def htm_pull(files):
     f = files()
     if len(f.SearchDir()) == 0:
@@ -52,25 +40,27 @@ def parse_file(files):
     r = open(f.TotalPath(), encoding="utf-8")
 
     soup = BeautifulSoup(r, 'html.parser')
-    d = soup.find_all('tr', {"class": "TableBase-bodyTr"})
-    num = 0
-    for dd in d:
-        cols = dd.find_all('td')
-        ddd = [ele.text.strip().replace("\\n", "") for ele in cols]
-        dddd = [ele for ele in cols]
-        dddd= dddd[0]
-        player_name_elem = dddd.find('a', {'class': ""})
-        player_pos_elem = dddd.find('span', {'class': "CellPlayerName-position"})
-        player_team_elem = dddd.find('span', {'class': "CellPlayerName-team"})
-        players_touchdown_elem = ddd[12]
-        if player_name_elem is not None and num < 21:
+    player_stats = soup.find_all('tr', {"class": "TableBase-bodyTr"})
+    num, list_of_players = 0, []
+    for players in player_stats:
+        player_stat_cols = players.find_all('td')
+        player_stat_ttl_td = [ele.text.strip().replace("\\n", "") for ele in player_stat_cols]
+        player_stat_info = [ele for ele in player_stat_cols]
+        player_stat_info = player_stat_info[0]
+        player_name_elem = player_stat_info.find('a', {'class': ""})
+        player_pos_elem = player_stat_info.find('span', {'class': "CellPlayerName-position"})
+        player_team_elem = player_stat_info.find('span', {'class': "CellPlayerName-team"})
+        players_touchdown_elem = player_stat_ttl_td[12]
+        if num < 21:
+            jspn_str = {"Name": player_name_elem.text.strip(),
+                        "Position": player_pos_elem.text.strip(),
+                        "Team": player_team_elem.text.strip(),
+                        "Touchdown Amount": players_touchdown_elem}
+            json_out = json.dumps(jspn_str)
+            list_of_players.append(json_out)
+            num += 1
+    for x in list_of_players: print(x)
 
-            print("Name:            ",player_name_elem.text.strip())
-            print("Position:        ",player_pos_elem.text.strip())
-            print("Team:             ",player_team_elem.text.strip())
-            print("Touchdown Amount:",players_touchdown_elem)
-            print("_____________________________________________________________________")
-            num+=1
 
 
 def main():
