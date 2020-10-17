@@ -49,12 +49,25 @@ def parse_file(files):
     r = open(f.TotalPath(), encoding="utf-8")
 
     soup = BeautifulSoup(r, 'html.parser')
-    d = soup.find_all('span', {"class": "CellPlayerName--long"})
+    d = soup.find_all('tr', {"class": "TableBase-bodyTr"})
     num = 0
     for dd in d:
-        name_elem = dd.find('a', {"class": ""})
-        print(num,' ',dd.text.replace("\n", "").strip())
-        num+=1
+        cols = dd.find_all('td')
+        ddd = [ele.text.strip().replace("\\n", "") for ele in cols]
+        dddd = [ele for ele in cols]
+        dddd= dddd[0]
+        player_name_elem = dddd.find('a', {'class': ""})
+        player_pos_elem = dddd.find('span', {'class': "CellPlayerName-position"})
+        player_team_elem = dddd.find('span', {'class': "CellPlayerName-team"})
+        players_touchdown_elem = ddd[12]
+        if player_name_elem is not None and num < 21:
+
+            print("Name:            ",player_name_elem.text.strip())
+            print("Position:        ",player_pos_elem.text.strip())
+            print("Team:             ",player_team_elem.text.strip())
+            print("Touchdown Amount:",players_touchdown_elem)
+            print("_____________________________________________________________________")
+            num+=1
 
 
 def main():
