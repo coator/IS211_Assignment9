@@ -13,7 +13,6 @@ class FParams:
         self.current_working_file = "football_stats.htm"
         self.localpath = os.getcwd() + self.current_working_folder
 
-
     def TotalPath(self):
         p = self.localpath + self.current_working_file
         return str(p)
@@ -28,7 +27,7 @@ def htm_pull(files):
     if len(f.SearchDir()) == 0:
         print(' dir empty')
         r = requests.get("https://www.cbssports.com/nfl/stats/player/scoring/nfl/regular/qualifiers")
-        open(f.localpath+f.current_working_file, 'xb').write(r.content)
+        open(f.localpath + f.current_working_file, 'xb').write(r.content)
     else:
         print('items in dir, skipping download')
     return
@@ -59,7 +58,6 @@ def parse_file(files):
             list_of_players.append(json_out)
             num += 1
     for x in list_of_players: print(x)
-
 
 
 def main():
