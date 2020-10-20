@@ -11,16 +11,15 @@ class FParams:
         else:
             self.current_working_folder = "/website_download/football_stats/"
         self.current_working_file = "football_stats.htm"
+        self.localpath = os.getcwd() + self.current_working_folder
 
-    def LocalPath(self):
-        return os.getcwd() + self.current_working_folder
 
     def TotalPath(self):
-        p = self.LocalPath() + self.current_working_file
+        p = self.localpath + self.current_working_file
         return str(p)
 
     def SearchDir(self):
-        olen = os.listdir(self.LocalPath())
+        olen = os.listdir(self.localpath)
         return olen
 
 
@@ -29,7 +28,7 @@ def htm_pull(files):
     if len(f.SearchDir()) == 0:
         print(' dir empty')
         r = requests.get("https://www.cbssports.com/nfl/stats/player/scoring/nfl/regular/qualifiers")
-        open(f.Localpath(), 'xb').write(r.content)
+        open(f.localpath+f.current_working_file, 'xb').write(r.content)
     else:
         print('items in dir, skipping download')
     return
