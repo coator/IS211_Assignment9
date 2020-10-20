@@ -10,12 +10,9 @@ class FParams:
             self.current_working_folder = '\\website_download\\' + fn + '\\'
         else:
             self.current_working_folder = "/website_download/" + fn + "/"
-        self.current_working_file = "" + fn + ".htm"
-        self.localpath = os.path.abspath(os.getcwd() + self.current_working_folder)
-
-    def TotalPath(self):
-        p = self.localpath + self.current_working_file
-        return str(p)
+        self.current_working_file = fn + ".htm"
+        self.localpath = os.getcwd()+self.current_working_folder
+        self.htmfileloc = self.localpath + self.current_working_file
 
     def SearchDir(self):
         olen = os.listdir(self.localpath)
@@ -23,27 +20,27 @@ class FParams:
 
 
 def htm_pull(files, url):
-    f = files()
-    if len(f.SearchDir()) == 0:
-        url = 'https://www.nasdaq.com/market-activity/stocks/aapl/historical/'
+    if len(files.SearchDir()) == 0:
         r = requests.get(url)
-        open(f.localpath + f.current_working_file, 'xb').write(r.content)
+        open(files.localpath + files.current_working_file, 'xb').write(r.content)
     else:
         print('items in dir, skipping download')
     return
 
 
 def parse_file(files):
-    f = files()
-    r = open(f.TotalPath(), encoding="utf-8")
+    r = open(files.htmfileloc, encoding="utf-8")
+    for rr in r:
+        print(rr)
 
 
 def main():
     fn = 'nfl_spreads'
     c = FParams(fn)
+    print(c.localpath)
     url = 'http://www.footballlocks.com/nfl_point_spreads.shtml'
-    htm_pull(, url)
-    parse_file(FParams)
+    htm_pull(c, url)
+    parse_file(c)
 
 
 main()
