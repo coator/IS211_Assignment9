@@ -57,35 +57,22 @@ def parse_file(files):
                     "TeamB": item[3]}
         json_out = json.dumps(json_str)
         handicaps.append(json_out)
-    for x in handicaps: print(x)
+    return handicaps
 
+def player_choice(handicaps):
+    for i in handicaps:
+        h = json.loads(i)
+        print(h.values()['TeamA'])
 
-def player_choice():
-    choice_tuple = ('date', 'teama', 'handicapping', "teamb")
-    while True:
-        i = input('Please choose {}'.format(choice_tuple))
-        if i == choice_tuple[0]:
-            print(choice_tuple[0])
-        elif i == choice_tuple[1]:
-            print(choice_tuple[1])
-        elif i == choice_tuple[2]:
-            print(choice_tuple[2])
-        elif i == choice_tuple[3]:
-            print(choice_tuple[3])
-        elif i == 'exit':
-            exit()
-        elif i not in choice_tuple:
-            pass
 
 
 def main():
     fn = 'nfl_spreads'
     c = FParams(fn)
-    print(c.localpath)
     url = 'http://www.footballlocks.com/nfl_point_spreads.shtml'
     htm_pull(c, url)
-    parse_file(c)
-    player_choice()
+    game_list = parse_file(c)
+    player_choice(game_list)
 
 
 main()
