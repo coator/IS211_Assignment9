@@ -52,24 +52,46 @@ def parse_file(files):
     for item in aa:
         item = item.split(',')
         json_str = {"Date": item[0],
-                    "TeamA": item[1],
-                    "Handicapping score": item[2],
-                    "TeamB": item[3]}
+                    "Favorite": item[1],
+                    "Spread": item[2],
+                    "Underdog": item[3]}
         json_out = json.dumps(json_str)
         handicaps.append(json_out)
     return handicaps
 
+
 def player_choice(handicaps):
     for i in handicaps:
         h = json.loads(i)
-        print(h.values()['TeamA'])
+        print(h['Date'].strip('ET'))
+    while True:
+        date_choice = input('Please choose a date and time from above: ')
+        date_choice = ' '+date_choice + ' ET '
+        truthy_return = False
+        for x in handicaps:
+
+            h = json.loads(x)
+            if h['Date'].strip(' ') == str(date_choice.strip(' ')):
+                if h['Favorite'][0:3] == ' At':
+                    print('{}: Underdog{}{} with a spread of{}'.format(h['Date'], h['Underdog'],h['Favorite'],
+                                                                                        h['Spread']))
+                    truthy_return = True
+                else:
+                    print('{}: Favorite{}{} with a spread of{}'.format(h['Date'], h['Favorite'], h['Underdog'],
+                                                                                        h['Spread']))
+                    truthy_return = True
+        if truthy_return:
+            return
+        else:
+            print('None Returned, Please try again')
+
 
 
 
 def main():
     fn = 'nfl_spreads'
     c = FParams(fn)
-    url = 'http://www.footballlocks.com/nfl_point_spreads.shtml'
+    url = "http://www.footballlocks.com/nfl_point_spreads.shtml"
     htm_pull(c, url)
     game_list = parse_file(c)
     player_choice(game_list)
